@@ -1,0 +1,17 @@
+fastapi
+uvicorn
+pandas
+numpy
+biopython
+
+scikit-learn
+requests
+beautifulsoup4
+motor
+python-dotenv
+httpx
+certifi
+dnspython
+pypdf
+reportlab
+python-multipart

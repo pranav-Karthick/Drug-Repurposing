@@ -1,0 +1,109 @@
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { ArrowLeft, Beaker, MapPin } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import MarketSection from "@/components/MarketSection";
+import EximSection from "@/components/EximSection";
+import PatentSection from "@/components/PatentSection";
+import TrialsSection from "@/components/TrialsSection";
+import WebIntelSection from "@/components/WebIntelSection";
+import InternalInsightsSection from "@/components/InternalInsightsSection";
+import InnovationSummary from "@/components/InnovationSummary";
+import ReportDownload from "@/components/ReportDownload";
+import { getMockResults } from "@/services/api";
+
+const Results = () => {
+    const location = useLocation();
+    const navigate = useNavigate();
+    const formData = location.state;
+    const [results, setResults] = useState(null);
+
+    useEffect(() => {
+        if (!formData) {
+            navigate("/");
+            return;
+        }
+
+        // Check if we have real API results passed in state
+        if (formData.innovationSummary) {
+            setResults(formData);
+        } else {
+            // Fallback for direct access or dev: use mock
+            const mockResults = getMockResults(formData.moleculeName || "Test", formData.therapyArea || "Demo");
+            setResults(mockResults);
+        }
+    }, [formData, navigate]);
+
+    if (!formData || !results) {
+        return null;
+    }
+
+    return (
+        <div className="min-h-screen pb-24">
+            {/* Background */}
+            <div className="fixed inset-0 pointer-events-none">
+                <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px]" />
+                <div className="absolute bottom-1/4 left-0 w-[400px] h-[400px] bg-primary/5 rounded-full blur-[80px]" />
+            </div>
+
+            {/* Header */}
+            <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-xl border-b border-border">
+                <div className="container mx-auto px-4 py-4">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => navigate("/")}
+                            >
+                                <ArrowLeft className="w-5 h-5" />
+                            </Button>
+                            <div>
+                                <div className="flex items-center gap-2">
+                                    <Beaker className="w-5 h-5 text-primary" />
+                                    <h1 className="text-xl font-display font-bold text-foreground">
+                                        {formData.moleculeName}
+                                    </h1>
+                                </div>
+                                <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                                    <MapPin className="w-3 h-3" />
+                                    {formData.therapyArea}
+                                </div>
+                            </div>
+                        </div>
+                        <Button variant="glass" onClick={() => navigate("/")}>
+                            New Research
+                        </Button>
+                        <ReportDownload
+                            moleculeName={formData.moleculeName}
+                            therapyArea={formData.therapyArea}
+                        />
+                    </div>
+                </div>
+            </header>
+
+            {/* Results Grid */}
+            <main className="container mx-auto px-4 py-8">
+                {/* Innovation Summary - Full Width at Top */}
+                <div className="mb-8">
+                    <InnovationSummary data={results.innovationSummary} />
+                </div>
+
+                {/* Main Grid */}
+                <div className="grid lg:grid-cols-2 gap-6">
+                    <MarketSection data={results.marketInsights} />
+                    <EximSection data={results.eximData} />
+                    <PatentSection data={results.patents} />
+                    <TrialsSection data={results.trials} realTrials={results.real_trials} />
+                    <WebIntelSection data={results.webIntelligence} realPubs={results.real_publications} />
+                    <InternalInsightsSection data={results.internalInsights} />
+                </div>
+            </main>
+
+            {/* Floating Download Button */}
+
+        </div>
+    );
+};
+
+export default Results;

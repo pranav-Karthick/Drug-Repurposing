@@ -1,0 +1,84 @@
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { Beaker, Dna, Brain, Activity, Sparkles } from "lucide-react";
+import MoleculeForm from "@/components/MoleculeForm";
+
+const Home = () => {
+    const navigate = useNavigate();
+
+    const handleSubmit = (data) => {
+        // Navigate to loading page with form data
+        navigate("/loading", { state: data });
+    };
+
+    return (
+        <div className="min-h-screen relative overflow-hidden">
+            {/* Background Effects */}
+            <div className="fixed inset-0 pointer-events-none">
+                <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[120px]" />
+                <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px]" />
+                <div
+                    className="absolute inset-0 opacity-30"
+                    style={{
+                        backgroundImage: "radial-gradient(circle at 1px 1px, hsl(217 33% 25% / 0.3) 1px, transparent 0)",
+                        backgroundSize: "40px 40px",
+                    }}
+                />
+            </div>
+
+            {/* Floating Icons */}
+            <div className="fixed inset-0 pointer-events-none overflow-hidden">
+                <Dna className="absolute top-20 left-[10%] w-8 h-8 text-primary/20 animate-float" />
+                <Brain className="absolute top-40 right-[15%] w-10 h-10 text-primary/15 animate-float" style={{ animationDelay: "1s" }} />
+                <Beaker className="absolute bottom-32 left-[20%] w-7 h-7 text-primary/20 animate-float" style={{ animationDelay: "2s" }} />
+                <Activity className="absolute bottom-40 right-[25%] w-9 h-9 text-primary/15 animate-float" style={{ animationDelay: "1.5s" }} />
+            </div>
+
+            {/* Main Content */}
+            <div className="relative z-10 container mx-auto px-4 py-16 flex flex-col items-center justify-center min-h-screen">
+                {/* Header */}
+                <div className="text-center mb-12 animate-fade-in">
+                    <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-primary/20 mb-6 animate-pulse-glow">
+                        <Sparkles className="w-10 h-10 text-primary" />
+                    </div>
+                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-foreground mb-4">
+                        AI-Powered Drug
+                        <br />
+                        <span className="gradient-text">Repurposing Explorer</span>
+                    </h1>
+                    <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                        Enter a molecule and discover market insights, patents, trials, and innovation opportunities powered by advanced AI analysis.
+                    </p>
+                </div>
+
+                {/* Form Card */}
+                <div className="w-full max-w-2xl animate-slide-up" style={{ animationDelay: "200ms" }}>
+                    <div className="glass-card p-8">
+                        <MoleculeForm onSubmit={handleSubmit} />
+                    </div>
+                </div>
+
+                {/* Feature Pills */}
+                <div className="flex flex-wrap justify-center gap-3 mt-12 animate-fade-in" style={{ animationDelay: "400ms" }}>
+                    {[
+                        "Market Analysis",
+                        "Patent Landscape",
+                        "Clinical Trials",
+                        "Web Intelligence",
+                        "Innovation Synthesis",
+                    ].map((feature, index) => (
+                        <span
+                            key={feature}
+                            className="px-4 py-2 rounded-full bg-muted/50 text-sm text-muted-foreground border border-border/50"
+                            style={{ animationDelay: `${index * 100}ms` }}
+                        >
+                            {feature}
+                        </span>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default Home;
